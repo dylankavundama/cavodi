@@ -210,7 +210,7 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Color(0xFF80B4FB), title: const Text('Cavodi')),
+          backgroundColor: const Color(0xFF80B4FB), title: const Text('Cavodi')),
       body: entries.isEmpty
           ? Center(
               child: Padding(

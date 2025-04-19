@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Cavodi',
       debugShowCheckedModeBanner: false,
-      home: seenOnboarding ? TravelDiaryPage() : const OnboardingScreen(),
+      home: seenOnboarding ? const TravelDiaryPage() : const OnboardingScreen(),
     );
   }
 }

@@ -41,6 +41,7 @@ dependencies:
   carousel_slider: any
   google_fonts :
   share: any
+  # geolocator: ^9.0.1 
 
 dev_dependencies:
   flutter_test:
