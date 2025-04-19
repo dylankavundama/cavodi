@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TravelDiaryPage extends StatefulWidget {
@@ -23,6 +25,39 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
     _loadEntries();
   }
 
+  void _deleteEntry(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    entries.removeAt(index);
+    await prefs.setString('travel_entries', jsonEncode(entries));
+    setState(() {});
+  }
+
+  void _shareEntry(Map<String, dynamic> entry) async {
+    final title = entry['title'] ?? '';
+    final desc = entry['description'] ?? '';
+    final date = entry['date'] ?? '';
+    final content = '📍 $title\n🗓️ $date\n📝 $desc';
+
+    final List<String> imagePaths = List<String>.from(entry['photos'] ?? []);
+    List<File> imageFiles = [];
+
+    // Convertir les chemins d'image en objets File
+    for (String path in imagePaths) {
+      imageFiles.add(File(path));
+    }
+
+    if (imageFiles.isNotEmpty) {
+      // Partager avec les images
+      Share.shareFiles(
+        imageFiles.map((file) => file.path).toList(),
+        text: content,
+      );
+    } else {
+      // Si aucune image, partager seulement le texte
+      Share.share(content);
+    }
+  }
+
   Future<void> _loadEntries() async {
     final prefs = await SharedPreferences.getInstance();
     final savedData = prefs.getString('travel_entries');
@@ -31,7 +66,8 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
       setState(() {
         entries = decoded
             .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
-            .toList();
+            .toList()
+          ..sort((a, b) => (b['date'] ?? '').compareTo(a['date'] ?? ''));
       });
     }
   }
@@ -79,10 +115,21 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
                     enableInfiniteScroll: false,
                   ),
                   items: imagePaths.map<Widget>((path) {
-                    return Image.file(
-                      File(path),
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                FullscreenImagePage(imagePath: path),
+                          ),
+                        );
+                      },
+                      child: Image.file(
+                        File(path),
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     );
                   }).toList(),
                 ),
@@ -92,14 +139,65 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
                   if (date != null)
                     Text('${date.day}/${date.month}/${date.year}',
                         style: const TextStyle(color: Colors.grey)),
+                  const Divider(),
                   const SizedBox(height: 5),
                   Text(desc),
+                  const SizedBox(height: 10),
+                  Row(
+
+
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+               
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.redAccent),
+                        onPressed: () {
+                          final index = entries.indexOf(entry);
+                          if (index != -1) {
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: const Text('Confirmer la suppression'),
+                                content: const Text(
+                                    'Voulez-vous vraiment supprimer cette entrée ?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('Annuler'),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.redAccent,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      _deleteEntry(index);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Supprimer'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                      ),       IconButton(
+                        icon:   const Icon(Icons.share, color: Color(0xFF80B4FB),),
+                        onPressed: () => _shareEntry(entry),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -115,18 +213,21 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
       appBar: AppBar(
           backgroundColor: Color(0xFF80B4FB), title: const Text('Cavodi')),
       body: entries.isEmpty
-          ? const Center(
+          ? Center(
               child: Padding(
                 padding: EdgeInsets.all(32.0),
                 child: Text(
                   'Aucun souvenir pour le moment.\nAjoutez votre première aventure !',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
             )
           : ListView(
-              children: entries.map(_buildEntryCard).toList(),
+              children: entries.reversed.map(_buildEntryCard).toList(),
             ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF80B4FB),
@@ -216,16 +317,15 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
             Row(
               children: [
                 ElevatedButton(
-
-                                style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF80B4FB), // Couleur personnalisée
-                foregroundColor: Colors.white, // Couleur du texte
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF80B4FB), // Couleur personnalisée
+                    foregroundColor: Colors.white, // Couleur du texte
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                   onPressed: _pickDate,
                   child: const Text('Choisir une date'),
                 ),
@@ -284,6 +384,31 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
             onPressed: _save,
             child: const Text('Enregistrer')),
       ],
+    );
+  }
+}
+
+class FullscreenImagePage extends StatelessWidget {
+  final String imagePath;
+
+  const FullscreenImagePage({super.key, required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Center(
+          child: Hero(
+            tag: imagePath,
+            child: Image.file(
+              File(imagePath),
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

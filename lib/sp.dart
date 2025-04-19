@@ -25,7 +25,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     },
     {
       "image":
-          "asset/b.jpeg",
+          "asset/c.webp",
       "title": "Créez votre journal de voyage",
       "description": "Ajoutez des photos, des notes et localisez vos aventures."
     },
