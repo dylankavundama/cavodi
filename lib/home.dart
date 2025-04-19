@@ -7,12 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MaterialApp(
-    home: TravelDiaryPage(),
-  ));
-}
-
 class TravelDiaryPage extends StatefulWidget {
   const TravelDiaryPage({super.key});
 
@@ -118,15 +112,24 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: const Text('Cavodi')),
-      body: ListView(
-        children: [
-          ...entries.map(_buildEntryCard).toList(),
-        ],
-      ),
+      appBar: AppBar(
+          backgroundColor: Color(0xFF80B4FB), title: const Text('Cavodi')),
+      body: entries.isEmpty
+          ? const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32.0),
+                child: Text(
+                  'Aucun souvenir pour le moment.\nAjoutez votre première aventure !',
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          : ListView(
+              children: entries.map(_buildEntryCard).toList(),
+            ),
       floatingActionButton: FloatingActionButton(
-
-        backgroundColor:  Color(0xFF80B4FB),
+        backgroundColor: Color(0xFF80B4FB),
         onPressed: _openAddEntryDialog,
         child: const Icon(Icons.add),
       ),
@@ -219,7 +222,7 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
                 const SizedBox(width: 10),
                 Text(selectedDate != null
                     ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
-                    : 'Aucune date')
+                    : '')
               ],
             ),
             const SizedBox(height: 10),
@@ -239,8 +242,9 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Annuler')),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Annuler'),
+        ),
         ElevatedButton(onPressed: _save, child: const Text('Enregistrer')),
       ],
     );
