@@ -1,3 +1,4 @@
+import 'package:cavodi/home.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -14,9 +15,9 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Rediriger vers l'écran principal après 3 secondes
-    Timer(const Duration(seconds: 1111), () {
+    Timer(const Duration(seconds: 5), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomePage()),
+        MaterialPageRoute(builder: (_) =>   TravelDiaryPage()),
       );
     });
   }
@@ -29,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           // Image en arrière-plan
           Image.network(
-            'https://images.pexels.com/photos/3360711/pexels-photo-3360711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+            'https://images.pexels.com/photos/2132126/pexels-photo-2132126.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
             fit: BoxFit.cover,
           ),
           // Couche de couleur sombre pour lisibilité
@@ -42,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Text(
-                  'Carnet de Voyage',
+                  'Cavodi',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 32,
@@ -67,14 +68,4 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-// Exemple d'écran suivant
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Page d\'accueil')),
-    );
-  }
-}
+ 
