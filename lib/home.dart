@@ -150,16 +150,11 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
                     Text('${date.day}/${date.month}/${date.year}',
                         style: const TextStyle(color: Colors.grey)),
                   const Divider(),
-                  const SizedBox(height: 5),
                   Text(desc),
-                  const SizedBox(height: 10),
                   Row(
-
-
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-               
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.redAccent),
                         onPressed: () {
@@ -192,8 +187,12 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
                             );
                           }
                         },
-                      ),       IconButton(
-                        icon:   const Icon(Icons.share, color: Color(0xFF80B4FB),),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.share,
+                          color: Color(0xFF80B4FB),
+                        ),
                         onPressed: () => _shareEntry(entry),
                       ),
                     ],
