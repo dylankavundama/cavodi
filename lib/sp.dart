@@ -1,7 +1,7 @@
 import 'package:cavodi/home.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
+import 'package:google_fonts/google_fonts.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Rediriger vers l'écran principal après 3 secondes
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 1115), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) =>   TravelDiaryPage()),
       );
@@ -29,9 +29,9 @@ class _SplashScreenState extends State<SplashScreen> {
         fit: StackFit.expand,
         children: [
           // Image en arrière-plan
-          Image.network(
-            'https://images.pexels.com/photos/2132126/pexels-photo-2132126.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            fit: BoxFit.cover,
+          Image.asset(
+            'asset/logo.png'
+,            fit: BoxFit.cover,
           ),
           // Couche de couleur sombre pour lisibilité
           Container(
@@ -62,6 +62,24 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
           ),
+
+           Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'From',
+                                    style: GoogleFonts.abel(
+                                        fontSize:11, color: Colors.white),
+                                  ),
+                                  Text(
+                                    'WMAHUB ',
+                                    style: GoogleFonts.abel(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
         ],
       ),
     );

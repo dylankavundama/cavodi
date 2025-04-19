@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -59,26 +60,55 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
 
   Widget _buildEntryCard(Map<String, dynamic> entry) {
     final List imagePaths = entry['photos'] ?? [];
+    final title = entry['title'];
+    final desc = entry['description'];
+    final dateStr = entry['date'];
+    final date = dateStr.isNotEmpty ? DateTime.parse(dateStr) : null;
 
-    return Card(
-      margin: const EdgeInsets.all(10),
-      child: ListTile(
-        title: Text(entry['title']),
-        subtitle: Column(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 1),
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (entry['date'] != null)
-              Text(
-                  'Date: ${DateTime.parse(entry['date']).toLocal().toString().split(' ')[0]}'),
-            Text(entry['description']),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 5,
-              children: imagePaths.map<Widget>((path) {
-                return Image.file(File(path),
-                    width: 80, height: 80, fit: BoxFit.cover);
-              }).toList(),
-            )
+            if (imagePaths.isNotEmpty)
+              ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(8)),
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: 250,
+                    viewportFraction: 1.0,
+                    enableInfiniteScroll: false,
+                  ),
+                  items: imagePaths.map<Widget>((path) {
+                    return Image.file(
+                      File(path),
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    );
+                  }).toList(),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18)),
+                  if (date != null)
+                    Text('${date.day}/${date.month}/${date.year}',
+                        style: const TextStyle(color: Colors.grey)),
+                  const SizedBox(height: 5),
+                  Text(desc),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -88,13 +118,15 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Carnet de Voyage')),
+      // appBar: AppBar(title: const Text('Cavodi')),
       body: ListView(
         children: [
           ...entries.map(_buildEntryCard).toList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
+
+        backgroundColor:  Color(0xFF80B4FB),
         onPressed: _openAddEntryDialog,
         child: const Icon(Icons.add),
       ),
