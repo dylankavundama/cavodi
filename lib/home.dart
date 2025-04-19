@@ -216,6 +216,16 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
             Row(
               children: [
                 ElevatedButton(
+
+                                style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF80B4FB), // Couleur personnalisée
+                foregroundColor: Colors.white, // Couleur du texte
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
                   onPressed: _pickDate,
                   child: const Text('Choisir une date'),
                 ),
@@ -228,6 +238,15 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: _pickImages,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF80B4FB), // Couleur personnalisée
+                foregroundColor: Colors.white, // Couleur du texte
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               child: const Text('Ajouter des photos'),
             ),
             Wrap(
@@ -242,10 +261,28 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
       ),
       actions: [
         TextButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red.shade300, // Couleur personnalisée
+            foregroundColor: Colors.white, // Couleur du texte
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Annuler'),
         ),
-        ElevatedButton(onPressed: _save, child: const Text('Enregistrer')),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFF80B4FB), // Couleur personnalisée
+              foregroundColor: Colors.white, // Couleur du texte
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            onPressed: _save,
+            child: const Text('Enregistrer')),
       ],
     );
   }

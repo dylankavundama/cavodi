@@ -19,19 +19,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<Map<String, String>> onboardingData = [
     {
       "image":
-          "https://images.pexels.com/photos/3360711/pexels-photo-3360711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+          "asset/a.jpeg",
       "title": "Bienvenue sur Cavodi",
       "description": "Explorez. Capturez. Partagez vos plus beaux souvenirs."
     },
     {
       "image":
-          "https://images.pexels.com/photos/8104846/pexels-photo-8104846.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+          "asset/b.jpeg",
       "title": "Créez votre journal de voyage",
       "description": "Ajoutez des photos, des notes et localisez vos aventures."
     },
     {
       "image":
-          "https://images.pexels.com/photos/2379198/pexels-photo-2379198.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+          "asset/d.jpeg",
       "title": "Partagez avec vos amis",
       "description": "Connectez-vous et échangez vos expériences uniques."
     },
@@ -82,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Image.network(
+        Image.asset(
           data["image"]!,
           fit: BoxFit.cover,
         ),
