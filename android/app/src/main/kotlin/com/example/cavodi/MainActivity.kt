@@ -1,4 +1,4 @@
-package com.example.cavodi
+package com.viz.cavodi
 
 import io.flutter.embedding.android.FlutterActivity
 

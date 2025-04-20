@@ -190,7 +190,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   style: GoogleFonts.abel(fontSize: 11, color: Colors.white),
                 ),
                 Text(
-                  'WMAHUB',
+                  'Viz inc',
                   style: GoogleFonts.abel(fontSize: 16, color: Colors.white),
                 ),
               ],
