@@ -41,6 +41,7 @@ dependencies:
   carousel_slider: any
   google_fonts :
   share: any
+  google_mobile_ads :
   # geolocator: ^9.0.1 
 
 dev_dependencies:

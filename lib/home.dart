@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +24,7 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
   void initState() {
     super.initState();
     _loadEntries();
+        _startNewGame();
   }
 
   void _deleteEntry(int index) async {
@@ -86,6 +88,124 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
         return AddEntryDialog(onSave: _saveEntry);
       },
     );
+  }
+
+
+
+//pub
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    _interstitialAd?.dispose();
+    super.dispose();
+  }
+
+  //intertial
+
+  InterstitialAd? _interstitialAd;
+  final _gameLength = 5;
+  late var _counter = _gameLength;
+//cavodi
+  final String _adUnitIdd = Platform.isAndroid
+      ? 'ca-app-pub-8882238368661853/9036053194'
+      : 'ca-app-pub-8882238368661853/9036053194';
+  void _startNewGame() {
+    setState(() => _counter = _gameLength);
+
+    _loadAdd();
+    _starTimer();
+  }
+
+  void _loadAdd() {
+    InterstitialAd.load(
+      adUnitId: _adUnitIdd,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+              onAdShowedFullScreenContent: (ad) {},
+              onAdImpression: (ad) {},
+              onAdFailedToShowFullScreenContent: (ad, err) {
+                ad.dispose();
+              },
+              onAdDismissedFullScreenContent: (ad) {
+                ad.dispose();
+              },
+              onAdClicked: (ad) {});
+
+          _interstitialAd = ad;
+        },
+        onAdFailedToLoad: (LoadAdError error) {},
+      ),
+    );
+  }
+
+  void _starTimer() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() => _counter--);
+
+      if (_counter == 0) {
+        _interstitialAd?.show();
+        timer.cancel();
+      }
+    });
+  }
+
+  void go() {
+    setState(() {
+      _interstitialAd?.show();
+    });
+  }
+
+  Future<void> allVideo() async {
+    setState(() {});
+  }
+
+//cavodi actu
+
+  BannerAd? _bannerAd;
+  bool _isLoaded = false;
+
+  final String _adUnitId = Platform.isAndroid
+      ? 'ca-app-pub-8882238368661853/4044640450'
+      : 'ca-app-pub-8882238368661853/4044640450';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _isLoaded = false;
+    _loadAd();
+  }
+
+  void _loadAd() async {
+    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        MediaQuery.of(context).size.width.truncate());
+
+    if (size == null) {
+      return;
+    }
+
+    BannerAd(
+      adUnitId: _adUnitId,
+      request: const AdRequest(),
+      size: size,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _bannerAd = ad as BannerAd;
+            _isLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          ad.dispose();
+        },
+        onAdOpened: (Ad ad) {},
+        onAdClosed: (Ad ad) {},
+        onAdImpression: (Ad ad) {},
+      ),
+    ).load();
   }
 
   Widget _buildEntryCard(Map<String, dynamic> entry) {
