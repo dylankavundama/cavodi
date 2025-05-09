@@ -7,7 +7,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
- 
+
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,7 +25,7 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
   void initState() {
     super.initState();
     _loadEntries();
-        _startNewGame();
+    _startNewGame();
   }
 
   void _deleteEntry(int index) async {
@@ -90,8 +90,6 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
       },
     );
   }
-
-
 
 //pub
 
@@ -331,11 +329,12 @@ class _TravelDiaryPageState extends State<TravelDiaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: const Color(0xFF80B4FB), title: const Text('Cavodi')),
+          backgroundColor: const Color(0xFF80B4FB),
+          title: const Text('Cavodi')),
       body: entries.isEmpty
           ? Center(
               child: Padding(
-                padding: EdgeInsets.all(32.0),
+                padding: const EdgeInsets.all(32.0),
                 child: Text(
                   'Aucun souvenir pour le moment.\nAjoutez votre première aventure !',
                   style: GoogleFonts.poppins(
